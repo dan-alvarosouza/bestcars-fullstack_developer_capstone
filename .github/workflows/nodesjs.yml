@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ '14.x' ] # Versão 14 do Node.js
+        node-version: [ '16.x' ] # Versão 14 do Node.js
 
     steps:
     - name: Checkout repository
