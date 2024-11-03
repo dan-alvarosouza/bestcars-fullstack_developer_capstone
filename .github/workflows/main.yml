@@ -1,0 +1,64 @@
+name: 'Lint Code'
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  lint_python:
+    name: Lint Python Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10, 3.12]  # Lista de versões de Python que você quer testar
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}  # Define a versão de Python para cada execução
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Print working directory
+        run: pwd
+
+      - name: Run Linter
+        run: |
+          find . -name "*.py" -exec flake8 {} \;
+          echo "Linted all the Python files successfully"
+
+  lint_js:
+    name: Lint JavaScript Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16, 18, 20]  # Lista das versões de Node.js que você quer usar
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}  # Utiliza cada versão da matrix
+
+      - name: Print working directory
+        run: pwd
+
+      - name: Install JSHint
+        run: npm install -g jshint
+
+      - name: Run Linter
+        run: |
+          find ./server/database -name "*.js" -exec jshint {} \;
+          echo "Linted all the JS files successfully"
